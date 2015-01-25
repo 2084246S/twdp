@@ -47,27 +47,29 @@ def populate():
         title="Flask",
         url="http://flask.pocoo.org")
 
-    # Print out what we have added to the user.
-    for c in Category.objects.all():
-        for p in Page.objects.filter(category=c):
-            print "- {0} - {1}".format(str(c), str(p))
-
     student_cat = add_cat("2084246S")
 
     add_page(cat=student_cat,
         title="PythonAnywhere Account",
         url="https://www.pythonanywhere.com/user/2084246S/consoles/")
 
-    add_page(cat=student_cat_cat,
+    add_page(cat=student_cat,
         title="Github Account",
         url="https://github.com/2084246S")
+
+    # Print out what we have added to the user.
+    for c in Category.objects.all():
+        for p in Page.objects.filter(category=c):
+            print "- {0} - {1}".format(str(c), str(p))
+
+
 
 def add_page(cat, title, url, views=0):
     p = Page.objects.get_or_create(category=cat, title=title, url=url, views=views)[0]
     return p
 
 def add_cat(name):
-    c = Category.objects.get_or_create(name=name, likes=likes, veiws=veiws)[0]
+    c = Category.objects.get_or_create(name=name)[0]
     return c
 
 # Start execution here!
