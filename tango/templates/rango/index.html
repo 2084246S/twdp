@@ -21,8 +21,8 @@
 {% if view %}
 <ul>
     <h1>Top five most visited pages</h1>
-    {% for category in view %}
-    <li><a href="/rango/category/{{ category.slug }}">{{ category.name }}</a></li>
+    {% for page in view %}
+    <li><a href="{{ page.url}}">{{ page.title }}</a></li>
     {% endfor %}
 </ul>
 {% else %}

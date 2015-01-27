@@ -5,14 +5,13 @@ from rango.models import Page
 
 def index(request):
     category_list = Category.objects.order_by('-likes')[:5]
-    views_list =  Category.objects.order_by('-veiws')[:5]
+    views_list =  Page.objects.order_by('-views')[:5]
     context_dict = {'categories':category_list,'view': views_list}
     return render(request,'rango/index.html',context_dict)
 
 def about(request):
     context_dict = {'boldmessage':"This tutorial was made by Rhianna Scott, 2084246S" }
     return render(request,'rango/about.html',context_dict)
-    # return HttpResponse("Rango says here is the about page <br/> <a href = '/rango'>Index</a><br/><br/> ")
 
 def category(request, category_name_slug):
 
