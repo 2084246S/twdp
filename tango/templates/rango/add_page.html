@@ -1,28 +1,27 @@
 <!DOCTYPE html>
-
 <html>
+
     <head>
-        <title> Drib </title>
+        <title>Add new page</title>
     </head>
 
     <body>
-        <h1>Add Page</h1>
+        <h1>Add a page to {{ category.name }}</h1>
 
-        <form id = 'page_form' method = 'post' action = "rango/add_page">
+        <form id="page_form" method="post" action="/rango/add_page">
+
             {% csrf_token %}
-            {%for hidden in forms.hidden_fields%}
-                {{hidden}}
-                {% endfor %}
+            {% for hidden in form.hidden_fields %}
+                {{ hidden }}
+            {% endfor %}
 
-            {%for field in forms.visible_fields%}
-                {{field}}
-                {{field.errors}}
-                {{field.help_text}}
-                {% endfor %}
+            {% for field in form.visible_fields %}
+                {{ field.errors }} <br/>
+                {{ field.help_text}} <br/>
+                {{ field }} <br/>
+            {% endfor %}
 
-            <input type = 'submit' name='Submit' value = "Add Page" />
+            <input type="submit" name="submit" value="Create Page" />
         </form>
     </body>
-
-
 </html>
