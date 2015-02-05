@@ -16,7 +16,7 @@ TEMPLATE_PATH = os.path.join(BASE_DIR,'templates')
 TEMPLATE_DIRS = [
     "C:/Users/rhianna/code/twd/tango",
     TEMPLATE_PATH,
-]
+    ]
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.7/howto/deployment/checklist/
 
@@ -30,7 +30,13 @@ TEMPLATE_DEBUG = True
 
 
 ALLOWED_HOSTS = []
-
+LOGIN_URL = '/rango/login/'
+PASSWORD_HASHERS = (
+    'django.contrib.auth.hashers.BCryptSHA256PasswordHasher',
+    'django.contrib.auth.hashers.BCryptPasswordHasher',
+    'django.contrib.auth.hashers.PBKDF2PasswordHasher',
+    'django.contrib.auth.hashers.PBKDF2SHA1PasswordHasher',
+)
 
 # Application definition
 
@@ -66,7 +72,7 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-    }
+        }
 }
 # Internationalization
 # https://docs.djangoproject.com/en/1.7/topics/i18n/
