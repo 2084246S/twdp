@@ -2,33 +2,34 @@
 
 {% load staticfiles %}
 
-{% block title %}{% if user.is_authenticated %}
-    <h1>Rango says... hello {{ user.username }}!</h1>
+{% block title %}
+{% if user.is_authenticated %}
+<h1>Rango says... hello {{ user.username }}!</h1>
 {% else %}
-    <h1>Rango says... hello world!</h1>
+<h1>Rango says... hello world!</h1>
 {% endif %}
 {% endblock %}
 {% block body_block %}
-    {% if categories %}
-        <ul>
-            <h1>Top five Categories</h1>
-            {% for category in categories %}
-                <li><a href="{% url 'category'  category.slug %}">{{ category.name }}</a></li>
-            {% endfor %}
-        </ul>
-    {% else %}
-        <strong>There are no categories present.</strong>
-    {% endif %}
+{% if categories %}
+<ul>
+    <h1>Top five Categories</h1>
+    {% for category in categories %}
+    <li><a href="{% url 'category'  category.slug %}">{{ category.name }}</a></li>
+    {% endfor %}
+</ul>
+{% else %}
+<strong>There are no categories present.</strong>
+{% endif %}
+<ul>
+    <h1>Top five most visited pages</h1>
+    {% if pages %}
+    {% for page in pages %}
+    <li><a href="{{ page.url}}">{{ page.title }}</a></li>
+    {% endfor %}
+</ul>
+{% else %}
+<strong>There are no categories present.</strong>
+{% endif %}
 
-    {% if view %}
-        <ul>
-            <h1>Top five most visited pages</h1>
-            {% for page in view %}
-                <li><a href="{{ page.url}}">{{ page.title }}</a></li>
-            {% endfor %}
-        </ul>
-    {% else %}
-        <strong>There are no categories present.</strong>
-    {% endif %}
 
 {% endblock %}

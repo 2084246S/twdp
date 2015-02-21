@@ -3,13 +3,19 @@
 {% load staticfiles %}
 
 
-    {% block title %}About{% endblock %}
-    {% comment %} <link rel="stylesheet" href="{% static "css/base.css" %}" />
-    <script src="{% static "js/jquery.js" %}"></script>{% endcomment %}
-
+{% block title %}About{% endblock %}
 
 {% block body_block %}
-<h1>Rango says here is the about page</h1>
-<strong>{{ boldmessage }}</strong><br />
-<img src="{% static "images/me.jpg" %}" alt="Picture me" height="42" width="42"/> <!-- New line -->
-{% endblock %}
+
+    <h1> Rango says here is the about page </h1>
+
+    {% if visits >= 1 %}
+        You've been to this site {{ visits }} time{% if visits > 1 %}s{% endif %}!
+    {% else %}
+        This appears to be your first time here.
+    {% endif %} <br />
+
+    <strong> {{boldmessage}}</strong><br/>
+    <img src = "{% static 'images/me.jpg'%}" alt = "Picture me" height = "42" width = "42" />
+
+    {% endblock %}
