@@ -1,12 +1,14 @@
 __author__ = 'rhianna'
 from django.conf.urls import patterns, url
+
 from rango import views
 from registration.backends.simple.views import RegistrationView
 
+
 # Create a new class that redirects the user to the index page, if successful at logging
 class MyRegistrationView(RegistrationView):
-    def get_success_url(self,request, user):
-        return '/rango/'
+    def get_success_url(self, request, user):
+        return '/rango/add_profile'
 
 
 urlpatterns = patterns('',
@@ -16,9 +18,9 @@ urlpatterns = patterns('',
                        url(r'^category/(?P<category_name_slug>[\w\-]+)/$', views.category, name='category'),
                        url(r'^category/(?P<category_name_slug>[\w\-]+)/add_page/$', views.add_page, name='add_page'),
                        url(r'^restricted/', views.restricted, name='restricted'),
-                       url(r'^search/', views.search, name = 'search'),
+                       url(r'^goto/$', views.track_url, name='goto'),
+                       url(r'^add_profile', views.register_profile, name='register_profile'),
+                       url(r'^profile/$', views.profile, name='profile'),
 
-                       # url(r'^register/$', views.register, name='register'),
-                       #url(r'^login/$', views.user_login, name='login'),
                        # url(r'^logout/$', views.user_logout, name='logout'),
 )

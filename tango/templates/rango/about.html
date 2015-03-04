@@ -3,7 +3,6 @@
 {% load staticfiles %}
 
 
-
 {% block body_block %}
 <div class="page-header">
     <h1>About</h1>
@@ -13,10 +12,12 @@
     You've been to this site {{ visits }} time{% if visits > 1 %}s{% endif %}!
     {% else %}
     This appears to be your first time here.
-    {% endif %} <br />
+    {% endif %} <br/>
+
     <p></strong>This is <b>Rango's about page.</b></p>
+
     <p><strong> {{boldmessage}}</strong></p>
 
-    <img src = "{% static 'images/me.jpg'%}" alt = "Picture me" height = "42" width = "42" />
+    <img src="{% static 'images/me.jpg'%}" alt="Picture me" height="42" width="42"/>
 </div>
 {% endblock %}

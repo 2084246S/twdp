@@ -1,12 +1,14 @@
+from datetime import datetime
+
 from django.shortcuts import render
 from django.db import IntegrityError
-from rango.models import Category, Page
-from rango.forms import PageForm, CategoryForm,UserForm, UserProfileForm
-from django.contrib.auth import authenticate, login, logout
-from django.http import HttpResponseRedirect, HttpResponse
+from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import User
+
+from rango.models import Category, Page
+from rango.forms import PageForm, CategoryForm, UserProfileForm
 from rango.bing_search import run_query
-from datetime import datetime
 
 
 def add_category(request):
@@ -87,7 +89,6 @@ def index(request):
 
 
 def about(request):
-
     if request.session.get('visits'):
         count = request.session.get('visits')
     else:
@@ -96,47 +97,15 @@ def about(request):
     context_dict = {'boldmessage': "This tutorial was made by Rhianna Scott, 2084246S"}
     context_dict['visits'] = count
 
-# remember to include the visit data
+    # remember to include the visit data
 
     return render(request, 'rango/about.html', context_dict)
 
 
 def category(request, category_name_slug):
     context_dict = {}
-
-    try:
-        category = Category.objects.get(slug=category_name_slug)
-        context_dict = {'category_name': category.name}
-
-        pages = Page.objects.filter(category=category)
-
-        context_dict['pages'] = pages
-        context_dict['category'] = category
-    except Category.DoesNotExist:
-
-        pass
-    return render(request, 'rango/category.html', context_dict)
-
-
-
-@login_required
-def restricted(request):
-    return HttpResponse("Since you're logged in, you can see this text!")
-
-
-# Use the login_required() decorator to ensure only those logged in can access the view.
-# @login_required
-# def user_logout(request):
-#     # Since we know the user is logged in, we can now just log them out.
-#     logout(request)
-#
-#     # Take the user back to the homepage.
-#     return HttpResponseRedirect('/rango/')
-
-def search(request):
-
-    result_list = []
-
+    context_dict['result_list'] = None
+    context_dict['query'] = None
     if request.method == 'POST':
         query = request.POST['query'].strip()
 
@@ -144,4 +113,76 @@ def search(request):
             # Run our Bing function to get the results list!
             result_list = run_query(query)
 
-    return render(request, 'rango/search.html', {'result_list': result_list})
+            context_dict['result_list'] = result_list
+            context_dict['query'] = query
+
+    try:
+        category = Category.objects.get(slug=category_name_slug)
+        context_dict['category_name'] = category.name
+        pages = Page.objects.filter(category=category).order_by('-views')
+        context_dict['pages'] = pages
+        context_dict['category'] = category
+    except Category.DoesNotExist:
+        pass
+
+    if not context_dict['query']:
+        context_dict['query'] = category.name
+
+    return render(request, 'rango/category.html', context_dict)
+
+
+@login_required
+def restricted(request):
+    return HttpResponse("Since you're logged in, you can see this text!")
+
+
+from django.shortcuts import redirect
+
+
+def track_url(request):
+    page_id = None
+    url = '/rango/'
+    if request.method == 'GET':
+        if 'page_id' in request.GET:
+            page_id = request.GET['page_id']
+            try:
+                page = Page.objects.get(id=page_id)
+                page.views = page.views + 1
+                page.save()
+                url = page.url
+            except:
+                pass
+
+    return redirect(url)
+
+
+def register_profile(request):
+    if request.method == 'POST':
+        profile_form = UserProfileForm(request.POST)
+        if profile_form.is_valid():
+            if request.user.is_authenticated():
+                profile = profile_form.save(commit=False)
+                user = User.objects.get(id=request.user.id)
+                profile.user = user
+                try:
+                    profile.picture = request.FILES['picture']
+                except:
+                    pass
+                profile.save()
+        return index(request)
+    else:
+        form = UserProfileForm(request.GET)
+    return render(request, 'rango/profile_registration.html', {'profile_form': form})
+
+
+@login_required
+def profile(request):
+    user = User.objects.get(username=request.user.username)
+    context_dict = {}
+    try:
+        userprofile = UserProfileForm.objects.get(user=user)
+    except:
+        userprofile = None
+    context_dict['user'] = user
+    context_dict['userprofile'] = userprofile
+    return render(request, 'rango/profile.html', context_dict)
