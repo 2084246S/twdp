@@ -1,11 +1,11 @@
 from django.shortcuts import render
 from django.db import IntegrityError
 from rango.models import Category, Page
-from rango.forms import PageForm, CategoryForm
+from rango.forms import PageForm, CategoryForm,UserForm, UserProfileForm
 from django.contrib.auth import authenticate, login, logout
 from django.http import HttpResponseRedirect, HttpResponse
 from django.contrib.auth.decorators import login_required
-from rango.forms import UserForm, UserProfileForm
+from rango.bing_search import run_query
 from datetime import datetime
 
 
@@ -132,3 +132,16 @@ def restricted(request):
 #
 #     # Take the user back to the homepage.
 #     return HttpResponseRedirect('/rango/')
+
+def search(request):
+
+    result_list = []
+
+    if request.method == 'POST':
+        query = request.POST['query'].strip()
+
+        if query:
+            # Run our Bing function to get the results list!
+            result_list = run_query(query)
+
+    return render(request, 'rango/search.html', {'result_list': result_list})
