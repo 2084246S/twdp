@@ -157,75 +157,56 @@ def track_url(request):
     return redirect(url)
 
 
+
 def register_profile(request):
-
-    registered = False
-
-
     if request.method == 'POST':
-
-        user_form = UserForm(data=request.POST)
-        profile_form = UserProfileForm(data=request.POST)
-        if user_form.is_valid() and profile_form.is_valid():
-
-            user = user_form.save()
-            user.set_password(user.password)
-            user.save()
-            profile = profile_form.save(commit=False)
-            profile.user = user
-            if 'picture' in request.FILES:
-                profile.picture = request.FILES['picture']
-            profile.save()
-            registered = True
-        else:
-            print user_form.errors, profile_form.errors
-
-
+        profile_form = UserProfileForm(request.POST)
+        if profile_form.is_valid():
+            if request.user.is_authenticated():
+                profile = profile_form.save(commit=False)
+                user = User.objects.get(id=request.user.id)
+                profile.user = user
+                try:
+                    profile.picture = request.FILES['picture']
+                except:
+                    pass
+                profile.save()
+                return index(request)
     else:
-        user_form = UserForm()
-        profile_form = UserProfileForm()
-
-
-    return render(request,'rango/register.html',{'user_form': user_form, 'profile_form': profile_form, 'registered': registered} )
+        form = UserProfileForm(request.GET)
+    return render(request, 'rango/profile_registration.html', {'profile_form': form})
 
 @login_required
 def profile(request):
-    user = User.objects.get(username=request.user.username)
+    u = User.objects.get(username=request.user.username)
     context_dict = {}
-    try:
-        userprofile = UserProfileForm.objects.get(user=user)
-    except:
-        userprofile = None
-    context_dict['user'] = user
-    context_dict['userprofile'] = userprofile
-    return render(request, 'rango/profile.html', context_dict)
 
+    try:
+        up = UserProfile.objects.get(user=u)
+    except:
+        up = None
+
+    context_dict['user'] = u
+    context_dict['userprofile'] = up
+    return render(request, 'rango/profile.html', context_dict)
 
 @login_required
 def edit_profile(request):
-    user = User.objects.get(username=request.user)
+    if request.method == 'POST':
 
-
-    userprofile = UserProfile.objects.get(user=user)
-
-
-    if request.method == 'GET':
-        edit_profile_form = UserProfileForm(request.GET)
-        context_dict = {}
-        context_dict['edit_profile_form'] = edit_profile_form
-        context_dict['user'] = user
-        context_dict['userprofile'] = userprofile
-        return render(request, 'rango/edit_profile.html', context_dict)
-
-    elif request.method == 'POST':
-
-        userprofile.picture = request.FILES['picture']
-
-
-        userprofile.website = request.POST['website']
-
-        userprofile.save()
-        return profile(request)
+        users_profile = UserProfile.objects.get(user=request.user)
+        profile_form = UserProfileForm(request.POST, instance=users_profile)
+        if profile_form.is_valid():
+            profile_to_edit = profile_form.save(commit=False)
+            try:
+                profile_to_edit.picture = request.FILES['picture']
+            except:
+                pass
+            profile_to_edit.save()
+            return profile(request)
+    else:
+        form = UserProfileForm(request.GET)
+        return render(request, 'rango/profile_edit.html', {'profile_form': form})
 
 
 def users(request):

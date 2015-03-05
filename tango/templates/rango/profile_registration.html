@@ -1,32 +1,16 @@
-<!DOCTYPE html>
-
-{% extends 'rango/base.html' %}
-
-{% load staticfiles %}
-
-{% block title %}Register{% endblock %}
+{% extends "base.html" %}
+{% load bootstrap_toolkit %}
 
 {% block body_block %}
-		<div class="page-header">
-        <h1>Register with Rango</h1>
-
-        {% if registered %}
-        Rango says: <strong>thank you for registering!</strong>
-		<li><a href="{% url 'index' %}">Return to the homepage.</a></li>
-        {% else %}
-        Rango says: <strong>register here!</strong><br />
-
-        <form id="user_form" method="post" action="/rango/register/"
+    <form id="profile_form" method="post" action="/rango/add_profile/"
                 enctype="multipart/form-data">
 
             {% csrf_token %}
 
 
-            {{ user_form.as_p }}
             {{ profile_form.as_p }}
 
             <!-- Provide a button to click to submit the form. -->
-            <input type="submit" name="submit" value="Register" />
-        </form>
-        {% endif %}
+            <input type="submit" name="submit" value="Finish Register" />
+    </form>
 {% endblock %}
