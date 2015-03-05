@@ -8,6 +8,8 @@ from rango.keys import BING_API_KEY
 
 
 
+
+
 # Add your BING_API_KEY
 
 BING_API_KEY = BING_API_KEY
@@ -15,7 +17,7 @@ BING_API_KEY = BING_API_KEY
 
 def run_query(search_terms):
     # if __name__ == '__main__':
-    #main()
+    # main()
     # Specify the base
     root_url = 'https://api.datamarket.azure.com/Bing/Search/'
     source = 'Web'

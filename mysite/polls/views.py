@@ -1,10 +1,10 @@
-
 from django.shortcuts import get_object_or_404, render
-from django.http import HttpResponseRedirect,HttpResponse
-from django.core.urlresolvers import reverse
+from django.http import HttpResponseRedirect
 from django.views import generic
 
 from polls.models import Choice, Question
+
+
 
 # ...
 def vote(request, question_id):
@@ -22,6 +22,7 @@ def vote(request, question_id):
         selected_choice.save()
 
         return HttpResponseRedirect(reverse('polls:results', args=(p.id,)))
+
 
 class IndexView(generic.ListView):
     template_name = 'polls/index.html'

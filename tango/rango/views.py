@@ -1,6 +1,7 @@
 from datetime import datetime
 
-from django.shortcuts import render
+
+from django.shortcuts import render,redirect
 from django.db import IntegrityError
 from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
@@ -136,7 +137,7 @@ def restricted(request):
     return HttpResponse("Since you're logged in, you can see this text!")
 
 
-from django.shortcuts import redirect
+
 
 
 def track_url(request):
@@ -157,6 +158,7 @@ def track_url(request):
 
 
 def register_profile(request):
+    completed = False
     if request.method == 'POST':
         try:
             profile = UserProfile.objects.get(user=request.user)
@@ -166,20 +168,20 @@ def register_profile(request):
         if profile_form.is_valid():
             if request.user.is_authenticated():
                 profile = profile_form.save(commit=False)
-                user = User.objects.get(id=request.user.id)
+                user = request.user
                 profile.user = user
                 try:
                     profile.picture = request.FILES['picture']
                 except:
                     pass
                 profile.save()
-            else:
-                print profile_form.errors
+                completed = True
+        else:
+            print profile_form.errors
         return index(request)
     else:
         profile_form = UserProfileForm(request.GET)
-    return render(request, 'rango/profile_registration.html', {'profile_form': profile_form})
-
+    return render(request, 'rango/profile_registration.html', {'profile_form': profile_form, 'completed': completed})
 
 @login_required
 def profile(request):
@@ -193,16 +195,45 @@ def profile(request):
     context_dict['userprofile'] = userprofile
     return render(request, 'rango/profile.html', context_dict)
 
-def user(request):
+
+@login_required
+def edit_profile(request):
+    user = User.objects.get(username=request.user)
+
+
+    userprofile = UserProfile.objects.get(user=user)
+
+
+    if request.method == 'GET':
+        edit_profile_form = UserProfileForm(request.GET)
+        context_dict = {}
+        context_dict['edit_profile_form'] = edit_profile_form
+        context_dict['user'] = user
+        context_dict['userprofile'] = userprofile
+        return render(request, 'rango/edit_profile.html', context_dict)
+
+    elif request.method == 'POST':
+
+        userprofile.picture = request.FILES['picture']
+
+
+        userprofile.website = request.POST['website']
+
+        userprofile.save()
+        return profile(request)
+
+
+def users(request):
     context_dict = {}
     profiles = UserProfile.objects.all()
     context_dict['profiles'] = profiles
-    return render(request,'rango/users.html',context_dict)
+    return render(request, 'rango/users.html', context_dict)
 
-def view_profile(request,profile_name):
+
+def view_profile(request, profile_name):
     context_dict = {}
-    user = User.objects.get(username = profile_name)
-    context_dict['user']=user
+    user = User.objects.get(username=profile_name)
+    context_dict['user'] = user
     profile = UserProfile.objects.get(user=user)
-    context_dict['profile']=profile
-    return render(request,'rango/view_profile.html',context_dict)
+    context_dict['profile'] = profile
+    return render(request, 'rango/view_profile.html', context_dict)

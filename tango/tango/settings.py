@@ -38,7 +38,7 @@ LOGIN_URL = '/accounts/login/'  # The page users are directed to if they are not
 
 # PASSWORD_HASHERS = (
 # 'django.contrib.auth.hashers.BCryptSHA256PasswordHasher',
-#  'django.contrib.auth.hashers.BCryptPasswordHasher',
+# 'django.contrib.auth.hashers.BCryptPasswordHasher',
 # 'django.contrib.auth.hashers.PBKDF2PasswordHasher',
 #'django.contrib.auth.hashers.PBKDF2SHA1PasswordHasher',
 #)
@@ -55,6 +55,7 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'rango',
     'registration',
+
 )
 
 MIDDLEWARE_CLASSES = (
