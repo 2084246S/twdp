@@ -8,7 +8,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 
 from rango.models import Category, Page, UserProfile
-from rango.forms import PageForm, CategoryForm, UserProfileForm
+from rango.forms import PageForm, CategoryForm, UserProfileForm,UserForm
 from rango.bing_search import run_query
 
 
@@ -158,30 +158,35 @@ def track_url(request):
 
 
 def register_profile(request):
-    completed = False
+
+    registered = False
+
+
     if request.method == 'POST':
-        try:
-            profile = UserProfile.objects.get(user=request.user)
-            profile_form = UserProfileForm(request.POST, instance=profile)
-        except:
-            profile_form = UserProfileForm(request.POST)
-        if profile_form.is_valid():
-            if request.user.is_authenticated():
-                profile = profile_form.save(commit=False)
-                user = request.user
-                profile.user = user
-                try:
-                    profile.picture = request.FILES['picture']
-                except:
-                    pass
-                profile.save()
-                completed = True
+
+        user_form = UserForm(data=request.POST)
+        profile_form = UserProfileForm(data=request.POST)
+        if user_form.is_valid() and profile_form.is_valid():
+
+            user = user_form.save()
+            user.set_password(user.password)
+            user.save()
+            profile = profile_form.save(commit=False)
+            profile.user = user
+            if 'picture' in request.FILES:
+                profile.picture = request.FILES['picture']
+            profile.save()
+            registered = True
         else:
-            print profile_form.errors
-        return index(request)
+            print user_form.errors, profile_form.errors
+
+
     else:
-        profile_form = UserProfileForm(request.GET)
-    return render(request, 'rango/profile_registration.html', {'profile_form': profile_form, 'completed': completed})
+        user_form = UserForm()
+        profile_form = UserProfileForm()
+
+
+    return render(request,'rango/register.html',{'user_form': user_form, 'profile_form': profile_form, 'registered': registered} )
 
 @login_required
 def profile(request):

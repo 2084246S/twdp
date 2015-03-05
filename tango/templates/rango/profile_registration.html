@@ -1,28 +1,32 @@
+<!DOCTYPE html>
+
 {% extends 'rango/base.html' %}
 
 {% load staticfiles %}
 
-{% block title %}Profile Registration{% endblock %}
+{% block title %}Register{% endblock %}
 
 {% block body_block %}
-{% if completed %}
-    <a href="/rango/">Return to the homepage.</a><br />
-{% else %}
-	<h2 class="form-signin-heading">Create a User Profile</h2>
-	</br>
+		<div class="page-header">
+        <h1>Register with Rango</h1>
 
-	<form id="profile_form" method="post" action="/rango/register_profile/"
-			enctype="multipart/form-data">
+        {% if registered %}
+        Rango says: <strong>thank you for registering!</strong>
+		<li><a href="{% url 'index' %}">Return to the homepage.</a></li>
+        {% else %}
+        Rango says: <strong>register here!</strong><br />
 
-		{% csrf_token %}
+        <form id="user_form" method="post" action="/rango/register/"
+                enctype="multipart/form-data">
 
-		{{ profile_form.as_p }}
+            {% csrf_token %}
 
 
-		</br>
-		<button class="btn btn-primary"  type="submit" name="submit">Submit</button>
+            {{ user_form.as_p }}
+            {{ profile_form.as_p }}
 
-	</form>
-{% endif %}
-
+            <!-- Provide a button to click to submit the form. -->
+            <input type="submit" name="submit" value="Register" />
+        </form>
+        {% endif %}
 {% endblock %}

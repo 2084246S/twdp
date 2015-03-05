@@ -4,7 +4,10 @@
 {% block body_block %}
 {% if user.is_authenticated %}
 <h1>{{ user.username }}'s profile.</h1>
-<img src="{{ userprofile.picture.url }}" alt="Your picture" class="img-thumbnail" height="100px" width="100px">
+{% if user.picture %}
+<img src="{{ profile.picture.url }}" alt="Your picture" class="img-thumbnail" height="100px" width="100px">
+{%endif%}
+
 <form role="form" method="post" action="" enctype="multipart/form-data">
     {% csrf_token %}
 
