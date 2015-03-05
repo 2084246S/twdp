@@ -6,7 +6,7 @@ from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 
-from rango.models import Category, Page
+from rango.models import Category, Page, UserProfile
 from rango.forms import PageForm, CategoryForm, UserProfileForm
 from rango.bing_search import run_query
 
@@ -158,7 +158,11 @@ def track_url(request):
 
 def register_profile(request):
     if request.method == 'POST':
-        profile_form = UserProfileForm(request.POST)
+        try:
+            profile = UserProfile.objects.get(user=request.user)
+            profile_form = UserProfileForm(request.POST, instance=profile)
+        except:
+            profile_form = UserProfileForm(request.POST)
         if profile_form.is_valid():
             if request.user.is_authenticated():
                 profile = profile_form.save(commit=False)
@@ -169,10 +173,12 @@ def register_profile(request):
                 except:
                     pass
                 profile.save()
+            else:
+                print profile_form.errors
         return index(request)
     else:
-        form = UserProfileForm(request.GET)
-    return render(request, 'rango/profile_registration.html', {'profile_form': form})
+        profile_form = UserProfileForm(request.GET)
+    return render(request, 'rango/profile_registration.html', {'profile_form': profile_form})
 
 
 @login_required
@@ -186,3 +192,17 @@ def profile(request):
     context_dict['user'] = user
     context_dict['userprofile'] = userprofile
     return render(request, 'rango/profile.html', context_dict)
+
+def user(request):
+    context_dict = {}
+    profiles = UserProfile.objects.all()
+    context_dict['profiles'] = profiles
+    return render(request,'rango/users.html',context_dict)
+
+def view_profile(request,profile_name):
+    context_dict = {}
+    user = User.objects.get(username = profile_name)
+    context_dict['user']=user
+    profile = UserProfile.objects.get(user=user)
+    context_dict['profile']=profile
+    return render(request,'rango/view_profile.html',context_dict)
