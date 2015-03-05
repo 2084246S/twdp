@@ -23,6 +23,11 @@ class PageForm(forms.ModelForm):
     url = forms.URLField(max_length=200, help_text="Please enter the URL of the page.")
     views = forms.IntegerField(widget=forms.HiddenInput(), initial=0)
 
+    class Meta:
+        # Provide an association between the ModelForm and a model
+        model = Page
+        exclude = ('category',)
+
     def clean(self):
         cleaned_data = self.cleaned_data
         url = cleaned_data.get('url')
@@ -34,17 +39,12 @@ class PageForm(forms.ModelForm):
 
         return cleaned_data
 
-    class Meta:
-        # Provide an association between the ModelForm and a model
-        model = Page
 
-        exclude = ('category',)
 
 
 class UserForm(forms.ModelForm):
-    username = forms.CharField(help_text="Please enter a username.")
-    email = forms.CharField(help_text="Please enter an email address.")
-    password = forms.CharField(widget=forms.PasswordInput(), help_text="Please enter a password.")
+
+    password = forms.CharField(widget=forms.PasswordInput())
 
     class Meta:
         model = User
@@ -52,8 +52,6 @@ class UserForm(forms.ModelForm):
 
 
 class UserProfileForm(forms.ModelForm):
-    website = forms.URLField(help_text="Please enter your website.", required=False)
-    picture = forms.ImageField(help_text="Select a profile image to upload.", required=False)
 
     class Meta:
         model = UserProfile

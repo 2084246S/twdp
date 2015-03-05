@@ -1,6 +1,5 @@
 from datetime import datetime
 
-
 from django.shortcuts import render,redirect
 from django.db import IntegrityError
 from django.http import HttpResponse
@@ -12,6 +11,7 @@ from rango.forms import PageForm, CategoryForm, UserProfileForm,UserForm
 from rango.bing_search import run_query
 
 
+@login_required
 def add_category(request):
     if request.method == 'POST':
         form = CategoryForm(request.POST)
@@ -108,14 +108,17 @@ def category(request, category_name_slug):
     context_dict['result_list'] = None
     context_dict['query'] = None
     if request.method == 'POST':
-        query = request.POST['query'].strip()
+        try:
+            query = request.POST['query'].strip()
 
-        if query:
-            # Run our Bing function to get the results list!
-            result_list = run_query(query)
+            if query:
+                # Run our Bing function to get the results list!
+                result_list = run_query(query)
 
-            context_dict['result_list'] = result_list
-            context_dict['query'] = query
+                context_dict['result_list'] = result_list
+                context_dict['query'] = query
+        except:
+            pass
 
     try:
         category = Category.objects.get(slug=category_name_slug)
@@ -135,9 +138,6 @@ def category(request, category_name_slug):
 @login_required
 def restricted(request):
     return HttpResponse("Since you're logged in, you can see this text!")
-
-
-
 
 
 def track_url(request):
@@ -206,7 +206,7 @@ def edit_profile(request):
             return profile(request)
     else:
         form = UserProfileForm(request.GET)
-        return render(request, 'rango/profile_edit.html', {'profile_form': form})
+        return render(request, 'rango/edit_profile.html', {'profile_form': form})
 
 
 def users(request):

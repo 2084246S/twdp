@@ -1,8 +1,8 @@
-{%extends 'base.html'%}
+{% extends 'rango/base.html' %}
 
 {% load staticfiles %}
 
-{% block title %}View_Profile{% endblock %}
+{% block title %}View Profile{% endblock %}
 
 {% block body_block %}
 
@@ -14,10 +14,12 @@
 		</div>
 
 		<ul class="list-group">
-			<li class="list-group-item"><h3>Email:</h3>{{user.email}}</li>
-			<li class="list-group-item"><h3>Website:</h3> {{profile.website}}</li>
-			<li <img src="{{ profile.picture }}" alt="Your picture" class="img-thumbnail" height="100px" width="100px"></li>
-				</ul>
+			<li class="list-group-item"><h3>Email:</h3>{{user.email}}</li> 
+			
+			<li class="list-group-item"><h3>Website:</h3> {{profile.website}}</li> 
+			
+			<li class="list-group-item"><h3>Picture:</h3> <img  width="280" height="200" src="{{profile.picture.url}}" alt="Profile Picture" /></li> 
+		</ul>		
 	</div>
-
+	
 {% endblock %}
