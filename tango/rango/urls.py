@@ -18,4 +18,4 @@ urlpatterns = patterns('',
                        url(r'^view_profile/(?P<profile_name>[\w\-]+)/$', views.view_profile, name='view_profile'),
                        url(r'^users/', views.users, name='users'),
 
-                       )
+)

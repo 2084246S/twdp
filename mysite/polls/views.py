@@ -6,6 +6,8 @@ from polls.models import Choice, Question
 
 
 
+
+
 # ...
 def vote(request, question_id):
     p = get_object_or_404(Question, pk=question_id)

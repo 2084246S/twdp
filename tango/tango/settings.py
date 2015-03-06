@@ -29,7 +29,7 @@ DEBUG = True
 
 TEMPLATE_DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['2084246s.pythonanywhere.com']
 REGISTRATION_OPEN = True  # If True, users can register
 ACCOUNT_ACTIVATION_DAYS = 7  # One-week activation window; you may, of course, use a different value.
 REGISTRATION_AUTO_LOGIN = True  # If True, the user will be automatically logged in.
@@ -40,7 +40,7 @@ LOGIN_URL = '/accounts/login/'  # The page users are directed to if they are not
 # 'django.contrib.auth.hashers.BCryptSHA256PasswordHasher',
 # 'django.contrib.auth.hashers.BCryptPasswordHasher',
 # 'django.contrib.auth.hashers.PBKDF2PasswordHasher',
-#'django.contrib.auth.hashers.PBKDF2SHA1PasswordHasher',
+# 'django.contrib.auth.hashers.PBKDF2SHA1PasswordHasher',
 #)
 
 

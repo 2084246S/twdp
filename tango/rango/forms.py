@@ -40,10 +40,7 @@ class PageForm(forms.ModelForm):
         return cleaned_data
 
 
-
-
 class UserForm(forms.ModelForm):
-
     password = forms.CharField(widget=forms.PasswordInput())
 
     class Meta:
@@ -52,7 +49,6 @@ class UserForm(forms.ModelForm):
 
 
 class UserProfileForm(forms.ModelForm):
-
     class Meta:
         model = UserProfile
         fields = ('website', 'picture')

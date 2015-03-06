@@ -1,13 +1,13 @@
 from datetime import datetime
 
-from django.shortcuts import render,redirect
+from django.shortcuts import render, redirect
 from django.db import IntegrityError
 from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 
 from rango.models import Category, Page, UserProfile
-from rango.forms import PageForm, CategoryForm, UserProfileForm,UserForm
+from rango.forms import PageForm, CategoryForm, UserProfileForm
 from rango.bing_search import run_query
 
 
@@ -157,7 +157,6 @@ def track_url(request):
     return redirect(url)
 
 
-
 def register_profile(request):
     if request.method == 'POST':
         profile_form = UserProfileForm(request.POST)
@@ -176,6 +175,7 @@ def register_profile(request):
         form = UserProfileForm(request.GET)
     return render(request, 'rango/profile_registration.html', {'profile_form': form})
 
+
 @login_required
 def profile(request):
     u = User.objects.get(username=request.user.username)
@@ -189,6 +189,7 @@ def profile(request):
     context_dict['user'] = u
     context_dict['userprofile'] = up
     return render(request, 'rango/profile.html', context_dict)
+
 
 @login_required
 def edit_profile(request):
