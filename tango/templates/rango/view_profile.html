@@ -17,8 +17,10 @@
 			<li class="list-group-item"><h3>Email:</h3>{{user.email}}</li> 
 			
 			<li class="list-group-item"><h3>Website:</h3> {{profile.website}}</li> 
-			
+			{% if profile.picture %}
 			<li class="list-group-item"><h3>Picture:</h3> <img  width="280" height="200" src="{{profile.picture.url}}" alt="Profile Picture" /></li> 
+			{%endif%}
+			
 		</ul>		
 	</div>
 	
