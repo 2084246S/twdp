@@ -126,11 +126,13 @@ def category(request, category_name_slug):
         pages = Page.objects.filter(category=category).order_by('-views')
         context_dict['pages'] = pages
         context_dict['category'] = category
+        if not context_dict['query']:
+            context_dict['query'] = category.name
+            
     except Category.DoesNotExist:
         pass
 
-    if not context_dict['query']:
-        context_dict['query'] = category.name
+    
 
     return render(request, 'rango/category.html', context_dict)
 
